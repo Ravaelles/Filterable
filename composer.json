@@ -1,0 +1,22 @@
+{
+    "name": "ravaelles/filterable",
+    "description": "Package for handling record filtering in Laravel 5.",
+    "keywords": ["filterable", "filter", "records", "laravel", "laravel5"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rafal Poniatowski",
+            "email": "ravaelles@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "laravel/framework": "5.1.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Ravaelles\\Filterable": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
