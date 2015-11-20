@@ -7,21 +7,38 @@ use Illuminate\Support\ServiceProvider;
 class FilterableServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap the application services.
+     * Perform post-registration booting of services.
      *
      * @return void
      */
     public function boot()
     {
-//        $this->loadViewsFrom(__DIR__ . '/path/to/views', 'courier');
+        $appViewsDir = base_path('resources/views/packages/filterable/');
 
-        $this->publishes([
-            __DIR__ . '../views' => base_path('resources/views/partials'),
-        ]);
+        // Establish Views Namespace
+        if (is_dir($appViewsDir)) {
+            // The package views have been published - use those views.
+            $this->loadViewsFrom($appViewsDir, 'Filterable');
+        } else {
+            // The package views have not been published. Use the defaults.
+            $this->loadViewsFrom(__DIR__ . '/../views', 'Filterable');
+            $this->publishes([
+                __DIR__ . '/../views/filtering.blade.php' => ($appViewsDir . 'filtering.blade.php'),
+            ]);
+        }
+
+//        $this->loadViewsFrom(realpath(__DIR__ . '/../views'), 'filterable');
+//        $this->loadViewsFrom(__DIR__ . '/../views', 'filterable');
+//        $this->loadViewsFrom(__DIR__ . '/views', 'filterable');
+//		$this->setupRoutes($this->app->router);
+        // this  for conig
+//        $this->publishes([
+//                __DIR__.'/config/contact.php' => config_path('contact.php'),
+//        ]);
     }
 
     /**
-     * Register the application services.
+     * Register any package services.
      *
      * @return void
      */
