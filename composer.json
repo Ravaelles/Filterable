@@ -30,7 +30,6 @@
             "Ravaelles\\Filterable\\": "src"
         }
     },
-	"minimum-stability": "stable",
     "autoload-dev": {
         "psr-4": {
             "Ravaelles\\Filterable\\Test\\": "tests"
