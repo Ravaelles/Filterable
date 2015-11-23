@@ -19,7 +19,15 @@ $ composer require ravaelles/filterable
 
 ## Usage
 
-In your model:
+In command line publish view:
+```
+php artisan vendor:publish
+```
+Feel free to modify it, it's now in `\resources\views\packages\filterable\filtering.blade.php`
+
+---
+
+Now in your model:
 ``` php
 use Ravaelles\Filterable\Filterable as Filterable;
 (..)
@@ -27,20 +35,30 @@ class MyModelName extends Model {
 	use Filterable; // Add trait
 ```
 
-In your controller:
+---
+
+It's time to define filters to be used (variable `$filters`). We will define example filters that will almost definitely
+In your controller, e.g. in index method:
 ``` php
 $filters = [
-    'status' => [
-        'Status' => [
-            Agreement::STATUS_CREATED => "Created",
-            Agreement::STATUS_AWAITING_SIGNATURE => "Awaiting signature",
-            Agreement::STATUS_CANCELED => "Canceled",
-            Agreement::STATUS_SIGNED => "Signed",
+
+    // First filter
+    'status' => [ // Db field name
+        'Status' => [ // Field name to be shown for user
+            1 => "Created", // [Values => Display names] for select element
+            2 => "Awaiting signature",
+            3 => "Canceled",
+            4 => "Signed",
         ]
     ],
+    
+    // Second filter
     'template_id' => [
-        'Template' => Template::lists('name', '_id')->all()
+        'Template' => [0 => "No", 1 => "Yes"]
+        // 'Template' => Template::lists('name', 'id')->all() // You could use something like this
     ],
+    
+    // You can add more filters here
 ];
 
 $users = User::with('blabla', 'blabla')
@@ -48,10 +66,16 @@ $users = User::with('blabla', 'blabla')
 	->paginate(10);
 ```
 
-In your view:
+---
+
+Finally, in your view e.g. index.blade.php add this:
 ``` php
 @include ('Filterable::filtering')
 ```
+
+---
+
+You should be now able to use this package and dynamically filter the records.
 
 ## License
 
