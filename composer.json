@@ -1,17 +1,19 @@
 {
-    "name": "Ravaelles/Filterable",
-    "description": ":package_description",
+    "name": "ravaelles/filterable",
+    "description": "Package for handling record filtering in Laravel 5.*",
     "keywords": [
-        "league",
-        ":package_name"
+        "laravel",
+        "filterable",
+		"filter",
+		"records"
     ],
     "homepage": "https://github.com/Ravaelles/Filterable",
     "license": "MIT",
     "authors": [
         {
-            "name": ":Rafal Poniatowski",
-            "email": ":ravaelles@gmail.com",
-            "homepage": ":www.rafalponiatowski.tk",
+            "name": "Rafal Poniatowski",
+            "email": "ravaelles@gmail.com",
+            "homepage": "www.rafalponiatowski.tk",
             "role": "Web Developer"
         }
     ],
@@ -28,6 +30,7 @@
             "Ravaelles\\Filterable\\": "src"
         }
     },
+	"minimum-stability": "stable",
     "autoload-dev": {
         "psr-4": {
             "Ravaelles\\Filterable\\Test\\": "tests"
