@@ -88,6 +88,7 @@ Notice that you can apply your own, custom `where` clauses just before the `->fi
 @include('vendor.filterable.filtering')
 ```
 Feel free to modify this file as you wish.
+
 ---
 
 **(7)** &nbsp; You are now able to use this package and dynamically filter the records! :)
