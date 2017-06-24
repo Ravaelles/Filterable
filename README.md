@@ -46,7 +46,7 @@ use Ravaelles\Filterable\Filterable as Filterable;
 (..)
 class MyModelName extends Model 
 {
-	use Filterable; // Add trait
+    use Filterable; // Add trait
 ```
 Every model that you want to be filterable will need this trait.
 
@@ -79,10 +79,12 @@ $filters = [
     //],
 ];
 
-$users = User::with('blabla', 'blabla')
+$users = User::orderBy('id')
 	->filterable($filters)
 	->paginate(10);
 ```
+
+Notice that you can apply your own, custom `where` clauses just before the `->filterable` part.
 
 ---
 
