@@ -130,6 +130,7 @@
         
         $(".filtering select option").each(function () {
             var select = $(this).closest('select');
+            var selectedValue = select.val();
             var value = $(this).val();
             var color = selectedValue ? "" : colorSelectGray;
             select.css("color", color);
