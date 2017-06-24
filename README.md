@@ -1,11 +1,6 @@
 # Filtering eloquent records for Laravel 5.*
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Quality Score][ico-code-quality]][link-code-quality]
-[![Total Downloads][ico-downloads]][link-downloads]
 
 Package to handle filtering of records in Laravel 5.*. Allows easy defining of filtering and includes blade template command.
 
