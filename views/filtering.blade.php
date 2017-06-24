@@ -1,13 +1,69 @@
-<div class="box box-default filtering">
+<style>
 
-    <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-search" style="color: #666;"></i>&nbsp; <span>Filter records</span></h3>
-        <div class="box-tools pull-right">
-            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-        </div><!-- /.box-tools -->
-    </div><!-- /.box-header -->
+    .filtering {
+        margin-left: 5px;
+    }
 
-    <div class="box-body">
+    .filtering .panel-title {
+        margin-top: 0;
+    }
+
+    .filtering .fa-search {
+        color: #666;
+    }
+
+    .filtering .form-group.inactive {
+        opacity: 0.5;
+        transition: all .7s;
+    }
+
+    .filtering .form-group.inactive select {
+        color: inherit !important;
+    }
+
+    .filtering .form-group.inactive:hover {
+        opacity: 1;
+        transition: all .3s;
+    }
+
+    .filtering .form-group label {
+        margin-right: 4px;
+        font-weight: normal;
+    }
+
+    .filtering select {
+        height: auto;
+        margin-right: 15px;
+        padding: 4px 6px;
+        padding-right: 0;
+        background-color: rgba(0,0,0,0.03);
+        text-align: left;
+        font-size: 95%;
+    }
+
+    .filtering select option {
+        padding-right: 0;
+    }
+</style>
+
+<div class="panel panel-default filtering">
+
+    <div class="panel-heading with-border">
+
+        <h4 class="panel-title">
+            <i class="fa fa-search"></i>&nbsp; <span>Filter records</span>
+        </h4>
+
+        <!--        <div class="panel-tools pull-right">
+                    <button class="btn btn-panel-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+                </div>-->
+
+    </div>
+
+    <div class="panel-body">
+
         <form class="form-inline" method="GET" id="filtering-form">
             <input type="hidden" name="_token" value="{!! csrf_token() !!}" />
 
@@ -15,10 +71,10 @@
             @if (!empty($filters))
             @foreach ($filters as $filterFieldName => $filterRecord)
             @foreach ($filterRecord as $filterDisplayName => $filterOptions)
-            <div class="form-group">
+            <div class="form-group {{ !$request->has($filterFieldName) ? "inactive" : "" }}">
                 <label for="{{ $filterFieldName }}" class="">{{ $filterDisplayName }}:</label>
                 <select name="{{ $filterFieldName }}" class="form-control">
-                    <option value="">------ No filter ------</option>
+                    <option value="">― No filter ―</option>
                     @foreach ($filterOptions as $value => $text) {
                     <option value="{{ $value }}" 
                             {{ $request->get($filterFieldName) === $value ? "selected" : "" }}
@@ -28,27 +84,6 @@
             </div>
             @endforeach
             @endforeach
-
-            <script type="text/javascript">
-                function updateFilteringSelectColors() {
-                    $(".filtering select").each(function () {
-                        var value = $(this).val();
-                        var color = value ? "inherit" : "#aaa";
-                        $(this).css("color", color);
-                    });
-                }
-
-                window.initQueue.push(function () {
-                    updateFilteringSelectColors();
-
-                    $("#filtering-form").change(function () {
-                        showPleaseWait();
-                        $("#filtering-form").submit();
-                    });
-
-                    $(".filtering select").change(updateFilteringSelectColors());
-                });
-            </script>
 
             @else
             <style>
@@ -71,6 +106,50 @@
             @endif
 
         </form><!-- /.filtering -->
-    </div><!-- /.box-body -->
+    </div><!-- /.panel-body -->
 
-</div><!-- /.box -->
+</div><!-- /.panel -->
+
+<!--=== Filtering SCRIPTS ============================================ !-->
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {
+        updateFilteringSelectColors();
+        $("#filtering-form").change(function () {
+            $("#filtering-form").submit();
+            $(".actual-content").fadeOut(300);
+        });
+        $(".filtering select").change(updateFilteringSelectColors());
+    });
+
+    // =========================================================================
+
+    function updateFilteringSelectColors() {
+        var colorSelectGray = "#aaa";
+        
+        $(".filtering select option").each(function () {
+            var select = $(this).closest('select');
+            var value = $(this).val();
+            var color = selectedValue ? "" : colorSelectGray;
+            select.css("color", color);
+        });
+
+        $('select')
+                .on('click', function (ev) {
+                    if (ev.offsetY < 0) {
+                        console.log("user click on option  ");
+                    } else {
+                        //dropdown is shown
+                        $(this).css('color', 'inherit');
+                    }
+                })
+                .mouseover(function(ev) {
+                    $(this).css('color', 'inherit');
+                })
+                .mouseout(function(ev) {
+                    $(this).css('color', colorSelectGray);
+                });
+    }
+</script>
+@endpush
