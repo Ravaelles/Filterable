@@ -1,11 +1,6 @@
-# Filtering eloquent records for Laravel 5.1
+# Filtering eloquent records for Laravel 5.*
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Quality Score][ico-code-quality]][link-code-quality]
-[![Total Downloads][ico-downloads]][link-downloads]
 
 Package to handle filtering of records in Laravel 5.*. Allows easy defining of filtering and includes blade template command.
 
@@ -19,26 +14,41 @@ $ composer require ravaelles/filterable
 
 ## Usage
 
-In command line publish view:
+**(1)** &nbsp; Open `config/app.php` and add to the end of providers this entry:
+```
+\Ravaelles\Filterable\FilterableServiceProvider::class,
+```
+
+---
+
+**(2)** &nbsp; Now open command line in root of your project and publish a view:
 ```
 php artisan vendor:publish
 ```
-Feel free to modify it, it's now in `\resources\views\packages\filterable\filtering.blade.php`
+Feel free to modify it, it's now in `resources\views\packages\filterable\filtering.blade.php`
 
 ---
 
-Now in your model:
+**(3)** &nbsp; Notice that `filtering.blade.php` uses `@push('scripts')` operator. 
+It appends all the javascript scripts to the end of the html, when jQuery has already been loaded to avoid `jQuery is not defined` error. 
+To make it work, please add `@stack('scripts')` part just after you load your last script using `<script>` tag. Notice the `@stack` blade operator is available since about Laravel 5.2.20.
+
+---
+
+**(4)** &nbsp; Now in your model add this trait:
 ``` php
 use Ravaelles\Filterable\Filterable as Filterable;
 (..)
-class MyModelName extends Model {
-	use Filterable; // Add trait
+class MyModelName extends Model 
+{
+    use Filterable; // Add trait
 ```
+Every model that you want to be filterable will need this trait.
 
 ---
 
-It's time to define filters to be used (variable `$filters`). We will define example filters that will almost definitely
-In your controller, e.g. in index method:
+**(5)** &nbsp; It's time to define filters to be used (variable `$filters`). We will define some example filters so you can see how it works.
+In your controller, just where you retrieve the records, add this:
 ``` php
 $filters = [
 
@@ -55,27 +65,32 @@ $filters = [
     // Second filter
     'template_id' => [
         'Template' => [0 => "No", 1 => "Yes"]
-        // 'Template' => Template::lists('name', 'id')->all() // You could use something like this
+        // 'Template' => Template::orderBy('id', -1)->pluck('name', 'id')->all() // Or use something like this
     ],
     
     // You can add more filters here
+    //'field_name' => [
+    //     'Display name' => ["black" => "Black tea", "green" => "Green tea"]
+    //],
 ];
 
-$users = User::with('blabla', 'blabla')
+$users = User::orderBy('id')
 	->filterable($filters)
 	->paginate(10);
 ```
 
+Notice that you can apply your own, custom `where` clauses just before the `->filterable` part.
+
 ---
 
-Finally, in your view e.g. index.blade.php add this:
+**(6)** &nbsp; Finally, in your view add this line which will automatically display the filters using selects:
 ``` php
-@include ('Filterable::filtering')
+@include('vendor.filterable.filtering')
 ```
-
+Feel free to modify this file as you wish.
 ---
 
-You should be now able to use this package and dynamically filter the records.
+**(7)** &nbsp; You are now able to use this package and dynamically filter the records! :)
 
 ## License
 
