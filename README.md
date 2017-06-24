@@ -1,4 +1,4 @@
-# Filtering eloquent records for Laravel 5.1
+# Filtering eloquent records for Laravel 5.*
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
