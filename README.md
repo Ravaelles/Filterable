@@ -19,7 +19,12 @@ $ composer require ravaelles/filterable
 
 ## Usage
 
-In command line publish view:
+Open `config/app.php` and add to the end of providers this entry:
+```
+\Ravaelles\Filterable\FilterableServiceProvider::class,
+```
+
+Now open command line in root of your project and publish a view:
 ```
 php artisan vendor:publish
 ```
@@ -31,7 +36,8 @@ Now in your model:
 ``` php
 use Ravaelles\Filterable\Filterable as Filterable;
 (..)
-class MyModelName extends Model {
+class MyModelName extends Model 
+{
 	use Filterable; // Add trait
 ```
 
@@ -55,7 +61,7 @@ $filters = [
     // Second filter
     'template_id' => [
         'Template' => [0 => "No", 1 => "Yes"]
-        // 'Template' => Template::lists('name', 'id')->all() // You could use something like this
+        // 'Template' => Template::orderBy('id', -1)->pluck('name', 'id')->all() // You could use something like this
     ],
     
     // You can add more filters here
@@ -70,7 +76,7 @@ $users = User::with('blabla', 'blabla')
 
 Finally, in your view e.g. index.blade.php add this:
 ``` php
-@include ('Filterable::filtering')
+@include('vendor.filterable.filtering')
 ```
 
 ---
