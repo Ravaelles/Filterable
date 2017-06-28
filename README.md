@@ -1,8 +1,11 @@
-# Filtering eloquent records for Laravel 5.*
+# Filtering and searching Eloquent records for Laravel 5.*
 
 [![Software License][ico-license]](LICENSE.md)
 
-Package to handle filtering of records in Laravel 5.*. Allows easy defining of filtering and includes blade template command.
+Package to handle filtering of records in Laravel 5.*, ready to work with MongoDB. 
+
+Define filters easily. Save time by using provided bootstrap view which displays all the filters and properly styles select elements (and far more!).
+Oh, and there's also a nice search box, too! :)
 
 ## Install
 
@@ -91,7 +94,24 @@ Feel free to modify this file as you wish.
 
 ---
 
-**(7)** &nbsp; You are now able to use this package and dynamically filter the records! :)
+**(7)** &nbsp; If you wish to use search box functionality then make sure to add `->searchable()` line in your controller like this:
+``` php
+$users = User::orderBy('id')
+    ->searchable()
+	->filterable($filters)
+	->paginate(10);
+```
+...and in your model add a list of fields you want to search against e.g.
+``` php
+public $searchable = [
+    'name', 'email', 'address'
+];
+```
+It will search for text from the search box in any of these fields.
+
+---
+
+**(8)** &nbsp; You are now able to use this package and dynamically filter the records! :)
 
 ## License
 
