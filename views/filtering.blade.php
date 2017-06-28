@@ -88,6 +88,7 @@ $searchValue = \Illuminate\Support\Facades\Request::get('searching');
     .search-form input {
         height: auto;
         padding: 3px 9px !important;
+        background-color: #f9f9f9;
     }
 
     .search-form button[type="reset"] {
@@ -218,7 +219,7 @@ $searchValue = \Illuminate\Support\Facades\Request::get('searching');
             <form class="search-form" method="GET" role="search">
                 <div class="input-group add-on">
                     <input class="form-control search" placeholder="Search" name="searching" 
-                           value="{!! $searchValue !!}" autocomplete="off">
+                           value="{!! $searchValue !!}" autocomplete="off" autofocus>
                     <div class="input-group-btn">
                         <button type="reset" class="btn btn-search-reset">
                             <span class="glyphicon glyphicon-remove">

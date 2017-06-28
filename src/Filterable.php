@@ -37,13 +37,14 @@ trait Filterable {
         // Validate
         $searchableFields = $this->searchable;
         if (!$searchableFields) {
-            abort(500, "No searchable fields for " . $this->getTable() . ". Please declare public \$searchable");
+            abort(500, "No searchable fields for " . $this->getTable() . ". "
+                . "Please declare public \$searchable = [] var in the model.");
         }
 
         // === Define search value =================================================
 
         if ($searchValue === -1) {
-            $searchValue = \Illuminate\Support\Facades\Request::get('searching');
+            $searchValue = trim(\Illuminate\Support\Facades\Request::get('searching'));
         }
 
         // =========================================================================
@@ -54,8 +55,7 @@ trait Filterable {
             if (is_array($searchableFields)) {
                 $query = $query->where(function($query) use ($searchValue, $searchableFields) {
                     foreach ($searchableFields as $fieldName) {
-                        $query->orWhere('first_name', 'regex', "/$searchValue/i");
-                        $query->orWhere('last_name', 'regex', "/$searchValue/i");
+                        $query->orWhere($fieldName, 'regex', "/$searchValue/i");
                     }
                 });
             }
