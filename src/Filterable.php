@@ -5,7 +5,10 @@ namespace Ravaelles\Filterable;
 use Illuminate\Support\Facades\Input;
 
 /**
- * Attach this trait to any model and then use ->filter($filters) to be able to filter records easily.
+ * Attach this trait to any model and then use ->filter($filters) to be able to 
+ * filter records easily.<br />
+ * You can also use ->searchable() to use the search field. Remember to define
+ * public $searchable array of fields to search against.
  */
 trait Filterable {
 
@@ -18,6 +21,43 @@ trait Filterable {
         foreach ($filters as $fieldName => $foo) {
             if (Input::has($fieldName)) {
                 $query = $query->where($fieldName, Input::get($fieldName));
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * Returns only those records, which have search value from 'searching' GET parameter.
+     * Use the public $searchable to indicate fields list to search against.
+     */
+    public function scopeSearchable($query, $searchValue = -1)
+    {
+
+        // Validate
+        $searchableFields = $this->searchable;
+        if (!$searchableFields) {
+            abort(500, "No searchable fields for " . $this->getTable() . ". Please declare public \$searchable");
+        }
+
+        // === Define search value =================================================
+
+        if ($searchValue === -1) {
+            $searchValue = \Illuminate\Support\Facades\Request::get('searching');
+        }
+
+        // =========================================================================
+
+        if (strlen($searchValue) > 0) {
+            $searchableFields = $this->searchable;
+
+            if (is_array($searchableFields)) {
+                $query = $query->where(function($query) use ($searchValue, $searchableFields) {
+                    foreach ($searchableFields as $fieldName) {
+                        $query->orWhere('first_name', 'regex', "/$searchValue/i");
+                        $query->orWhere('last_name', 'regex', "/$searchValue/i");
+                    }
+                });
             }
         }
 
