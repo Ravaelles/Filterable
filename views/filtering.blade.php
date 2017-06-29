@@ -169,14 +169,25 @@ $searchValue = \Illuminate\Support\Facades\Request::get('searching');
             @if (!empty($filters))
             @foreach ($filters as $filterFieldName => $filterRecord)
             @foreach ($filterRecord as $filterDisplayName => $filterOptions)
-            <div class="form-group {{ !$request->has($filterFieldName) ? "inactive" : "" }}">
-                <label for="{{ $filterFieldName }}" class="">{{ $filterDisplayName }}:</label>
-                <select name="{{ $filterFieldName }}" class="form-control">
+            <?php
+            $filterNameAsInGET = strtolower($filterDisplayName);
+            $filterValue = $request->get($filterNameAsInGET);
+            ?>
+            <div class="form-group {{ !$request->has($filterNameAsInGET) ? "inactive" : "" }}">
+                <label for="{{ $filterNameAsInGET }}" class="">{{ $filterDisplayName }}:</label>
+                <select name="{{ $filterNameAsInGET }}" class="form-control">
                     <option value="">― No filter ―</option>
+
+                    {{-- ### (optional) Add custom filter value ############################# --}}
+                    @if (str_contains($filterValue, ',and,'))
+                    <option value="{!! $filterValue !!}" selected>
+                        {!! ucwords(implode(' OR ', explode(',and,', $filterValue))) !!}
+                    </option>
+                    @endif
+
                     @foreach ($filterOptions as $value => $text) {
-                    <option value="{{ $value }}" 
-                            {{ $request->get($filterFieldName) === $value ? "selected" : "" }}
-                        >{!! is_array($text) ? "Array" : $text !!}</option>
+                    <option value="{{ $value }}" {{ $filterValue === $value ? "selected" : "" }}
+                            >{!! is_array($text) ? "Array" : $text !!}</option>
                     @endforeach
                 </select>
             </div>

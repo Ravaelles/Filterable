@@ -19,14 +19,29 @@ trait Filterable {
      */
     public function scopeFilterable($query, array $filters) {
         foreach ($filters as $fieldName => $foo) {
-            if (Input::has($fieldName)) {
 
-                // Convert field name to always be what the filters says, not the field name.
-                // If we don't do this, we might miss some filters.
-                $paramNameInGET = $filters[$fieldName];
-                $paramNameInGET = strtolower(array_keys($paramNameInGET)[0]);
+            // Convert field name to always be what the filters says, not the field name.
+            // If we don't do this, we might miss some filters.
+            $paramNameInGET = $filters[$fieldName];
+            $paramNameInGET = strtolower(array_keys($paramNameInGET)[0]);
+            $filterValue = Input::get($paramNameInGET);
 
-                $query = $query->where($fieldName, Input::get($paramNameInGET));
+            if (strlen($filterValue) > 0) {
+
+                // Handle multiple params using OR statement
+                if (str_contains($filterValue, ",and,")) {
+                    $filterValues = explode(",and,", $filterValue);
+                    $query = $query->where(function($query) use ($fieldName, $filterValues) {
+                        foreach ($filterValues as $filterValue) {
+                            $query->orWhere($fieldName, $filterValue);
+                        }
+                    });
+                }
+
+                // GET param is single value
+                else {
+                    $query = $query->where($fieldName, $filterValue);
+                }
             }
         }
 
