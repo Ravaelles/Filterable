@@ -20,7 +20,13 @@ trait Filterable {
     public function scopeFilterable($query, array $filters) {
         foreach ($filters as $fieldName => $foo) {
             if (Input::has($fieldName)) {
-                $query = $query->where($fieldName, Input::get($fieldName));
+
+                // Convert field name to always be what the filters says, not the field name.
+                // If we don't do this, we might miss some filters.
+                $paramNameInGET = $filters[$fieldName];
+                $paramNameInGET = strtolower(array_keys($paramNameInGET)[0]);
+
+                $query = $query->where($fieldName, Input::get($paramNameInGET));
             }
         }
 
